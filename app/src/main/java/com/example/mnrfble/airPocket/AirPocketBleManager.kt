@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.content.Context
 import android.util.Log
+import com.example.mnrfble.airPocket.callback.ResultCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,7 +34,7 @@ import com.example.mnrfble.util.HexUtil
 import java.util.UUID
 
 /**
- * NRF 的 Android-Ble-library 库,连接设备,订阅通知写法
+ * 利用NRF 的 Android-Ble-library 库,连接设备,订阅通知写法
  */
 class AirPocketBleManager(
     context: Context
@@ -46,6 +47,8 @@ private class AirPocketManageImpl(
 
     //LambdAdd
     private var nameCharacteristic: BluetoothGattCharacteristic? = null
+    private var uartRxCharacteristic: BluetoothGattCharacteristic? = null
+    private var uartTxCharacteristic: BluetoothGattCharacteristic? = null
 
     private var isServiceSupported = false
 
@@ -74,7 +77,7 @@ private class AirPocketManageImpl(
 
 
     /**
-     * 连开设备
+     * 断连设备
      */
     override fun disConnect() {
         Log.e("TTTT", "断开连接  $isConnected")
@@ -85,6 +88,19 @@ private class AirPocketManageImpl(
             disconnect().enqueue()
         }
     }
+
+    /**
+     *  写入命令UART
+     */
+    override fun writeCommand(text: String) {
+        if (text.isNotEmpty()) {
+            val commandBytes = text.toByteArray()
+            sendCommand(commandBytes)
+            Log.d("LambdA","successfully writen")
+        }
+
+    }
+
 
     override fun release() {
         // Cancel all coroutines.
@@ -127,46 +143,34 @@ private class AirPocketManageImpl(
                     Log.e("LambdA", "名称特征值: $nameCharacteristic")
                 }
 
+                UUID.fromString(BleDevicesCommand.UART_SERVICE_UUID) -> {
+                    uartRxCharacteristic = services.getCharacteristic(UUID.fromString(BleDevicesCommand.UART_RX_UUID))
+                    uartTxCharacteristic = services.getCharacteristic(UUID.fromString(BleDevicesCommand.UART_TX_UUID))
+                    val cccdDescriptor = uartRxCharacteristic?.getDescriptor(UUID.fromString(BleDevicesCommand.CCCD_UUID))
+                    Log.e("LambdA", "UART connect")
+                }
+
             }
         }
-        isServiceSupported = (nameCharacteristic != null)
+        isServiceSupported = (nameCharacteristic != null) && uartRxCharacteristic != null && uartTxCharacteristic != null
         return isServiceSupported
     }
 
     /**
      * 设备连接成功后的初始化处理
-     * 一般是订阅 notify/indicate 处理
+     * 订阅 notify
      */
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun initialize() {
         Log.d("LambdA", "111111111111")
-        /**
-        //订阅渔轮电量通知
-        val flow: Flow<RollerBatteryNotifyCallback> =
-            setNotificationCallback(rollerBatteryCharacteristic).asValidResponseFlowExt()
-        scope.launch {
-            flow.map { it.batteryValue }.collect { _batteryValue.tryEmit(it) }
-        }
-
-        enableNotifications(rollerBatteryCharacteristic).enqueue()
-
-        //订阅渔轮写入结果通知
-        val resultNotifyFlow: Flow<RollerResultNotifyCallback> =
-            setNotificationCallback(rollerResultNotifyCharacteristic).asValidResponseFlowExt()
-        scope.launch {
-            resultNotifyFlow.map { it.rawData }.collect {
-                //todo callback
-                // _data.value
+        uartRxCharacteristic?.let { characteristic ->
+            val flow:Flow<ResultCallback> = setNotificationCallback(characteristic).asValidResponseFlowExt()
+            scope.launch {
+                flow.map { it.rawData }.collect {
+                }
             }
+            enableNotifications(characteristic).enqueue()
         }
-
-        enableNotifications(rollerResultNotifyCharacteristic).enqueue()
-
-        //读取固件版本号
-        readCharacteristic(rollerSoftWareVersionCharacteristic).with(softWareVersionCallback)
-            .enqueue()
-        //
-        */
 
     }
 
@@ -175,6 +179,17 @@ private class AirPocketManageImpl(
      */
     override fun onServicesInvalidated() {
         nameCharacteristic =null
+        uartTxCharacteristic = null
+        uartRxCharacteristic = null
+    }
+
+    fun sendCommand(data: ByteArray) {
+        uartTxCharacteristic?.let {
+            val writeOperation = writeCharacteristic(it, data)
+            writeOperation.with { device, data ->
+                Log.d("UART", "Sent data: ${data}")
+            }.enqueue()
+        }
     }
 
 }

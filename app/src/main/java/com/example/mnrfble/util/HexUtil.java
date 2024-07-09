@@ -1,4 +1,5 @@
 package com.example.mnrfble.util;
+import java.nio.charset.StandardCharsets;
 
 public class HexUtil {
 
@@ -116,6 +117,18 @@ public class HexUtil {
 
     public static String extractData(byte[] data, int position) {
         return HexUtil.formatHexString(new byte[]{data[position]});
+    }
+
+    public static String hexStringToString(String hexString) {
+        hexString=hexString.substring(5);
+        String[] hexValues = hexString.split("-");
+        byte[] bytes = new byte[hexValues.length];
+
+        for (int i = 0; i < hexValues.length; i++) {
+            bytes[i] = (byte) Integer.parseInt(hexValues[i], 16);
+        }
+
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
 }

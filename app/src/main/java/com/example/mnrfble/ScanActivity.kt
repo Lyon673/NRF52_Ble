@@ -1,5 +1,8 @@
 package com.example.mnrfble
 
+/**
+ * 负责扫描作用的控制入口，是一个主要的activity，也是app的MAIN
+ */
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build

@@ -8,7 +8,7 @@ interface AirPocket {
 
 
     /**
-     * 设备连接状态
+     * 枚举设备连接状态
      */
     enum class ConnectState {
         LOADING,
@@ -31,6 +31,11 @@ interface AirPocket {
      * 断开连接
      */
     fun disConnect()
+
+    /**
+     * 写入指令
+     */
+    fun writeCommand(text:String)
 
     /**
      * 释放资源

@@ -1,5 +1,8 @@
 package com.example.mnrfble.di
 
+/**
+ * 用Dagger Hilt为AirPocket AirPocketBleManager的实例，并将其绑定到AirPocket接口上
+ */
 import android.content.Context
 import dagger.Binds
 import dagger.Module

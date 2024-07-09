@@ -1,5 +1,8 @@
 package com.example.mnrfble
 
+/**
+ * 另一个主要的activity，是选择设备后的进入的那个页面的控制入口
+ */
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -36,7 +39,7 @@ class DeviceDetailActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mAirPocketViewModel.mConnectState.collect {
-                    Log.e("TTTT", "连接状态1 -----  $it")
+                    Log.e("LambdA", "连接状态 -----  $it")
                 }
             }
         }
@@ -49,6 +52,9 @@ class DeviceDetailActivity : AppCompatActivity() {
         }
         mBinding.button2.setOnClickListener {
             mAirPocketViewModel.disConnect()
+        }
+        mBinding.button3.setOnClickListener {
+            mAirPocketViewModel.writeCommand(mBinding.editTextText.text.toString())
         }
     }
 

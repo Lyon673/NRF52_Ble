@@ -1,5 +1,8 @@
 package com.example.mnrfble.repository
 
+/**
+ * 一个委托接口
+ */
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow

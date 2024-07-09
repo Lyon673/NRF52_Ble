@@ -68,6 +68,11 @@ class AirPocketViewModel @Inject constructor(
         airPocketRepository.disConnect()
     }
 
+    fun writeCommand(text:String) {
+        airPocketRepository.writeCommand(text)
+    }
+
+
 
     override fun onCleared() {
         super.onCleared()
