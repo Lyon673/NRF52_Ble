@@ -2,6 +2,7 @@ package com.example.mnrfble.airPocket
 
 import android.bluetooth.BluetoothDevice
 import kotlinx.coroutines.flow.StateFlow
+import com.example.mnrfble.databinding.ActivityDeviceDetailBinding
 
 interface AirPocket {
 
@@ -42,6 +43,7 @@ interface AirPocket {
      */
     fun release()
 
+    fun passBinding(binding:ActivityDeviceDetailBinding)
 
 
 }

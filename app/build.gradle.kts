@@ -57,11 +57,11 @@ android {
 
 dependencies {
 
-    implementation ("androidx.compose.ui:ui:1.4.5")
-    implementation ("androidx.compose.material:material:1.4.5")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.4.5")
-    implementation ("androidx.activity:activity-compose:1.7.2")
-    implementation ("androidx.compose.material3:material3:1.1.0-alpha05")
+    implementation ("androidx.compose.ui:ui:1.6.6")
+    implementation ("androidx.compose.material:material:1.6.6")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.6.6")
+    implementation (libs.androidx.activity.compose.v172)
+    implementation ("androidx.compose.material3:material3:1.2.1")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

@@ -32,6 +32,9 @@ import com.example.mnrfble.util.HexUtil
 //import com.example.mnrfble.roller.callback.RollerResultNotifyCallback
 //import com.example.mnrfble.roller.callback.RollerSoftWareVersionCallback
 import java.util.UUID
+import com.example.mnrfble.databinding.ActivityDeviceDetailBinding
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.withContext
 
 /**
  * 利用NRF 的 Android-Ble-library 库,连接设备,订阅通知写法
@@ -52,6 +55,8 @@ private class AirPocketManageImpl(
 
     private var isServiceSupported = false
 
+    var mBinding:ActivityDeviceDetailBinding? = null
+
     /**
      * 连接设备
      */
@@ -69,6 +74,7 @@ private class AirPocketManageImpl(
 
             if (result.isSuccess) {
                 Log.d("LambdA", "连接成功")
+                mBinding?.textView?.text="连接成功"
             } else {
                 Log.d("LambdA", "连接失败: ${result.exceptionOrNull()}")
             }
@@ -81,6 +87,7 @@ private class AirPocketManageImpl(
      */
     override fun disConnect() {
         Log.e("TTTT", "断开连接  $isConnected")
+        mBinding?.textView?.text="断开连接成功"
 
         val wasConnected = isReady
         // If the device was connected, we have to disconnect manually.
@@ -166,7 +173,11 @@ private class AirPocketManageImpl(
         uartRxCharacteristic?.let { characteristic ->
             val flow:Flow<ResultCallback> = setNotificationCallback(characteristic).asValidResponseFlowExt()
             scope.launch {
-                flow.map { it.rawData }.collect {
+                flow.map { it.data }.collect {data->
+                    Log.d("LambdA","data:${data}")
+                    withContext(Main) {
+                        mBinding?.textView?.text=data
+                    }
                 }
             }
             enableNotifications(characteristic).enqueue()
@@ -192,7 +203,13 @@ private class AirPocketManageImpl(
         }
     }
 
+
+    override fun passBinding(binding:ActivityDeviceDetailBinding){
+        this.mBinding = binding
+    }
 }
+
+
 
 @ExperimentalCoroutinesApi
 inline fun <reified T : ProfileReadResponse> ValueChangedCallback.asValidResponseFlowExt(): Flow<T> =

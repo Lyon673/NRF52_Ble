@@ -6,3 +6,4 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.50" apply false
     id("no.nordicsemi.android.gradle.kotlin") version "1.11.0" apply false
 }
+

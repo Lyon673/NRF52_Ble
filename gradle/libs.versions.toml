@@ -1,4 +1,5 @@
 [versions]
+activityComposeVersion = "1.7.2"
 agp = "8.5.0"
 ble = "2.7.2"
 bleKtx = "2.7.2"
@@ -20,6 +21,7 @@ scanner = "1.6.0"
 appcompat = "1.7.0"
 
 [libraries]
+androidx-activity-compose-v172 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 baserecyclerviewadapterhelper = { module = "io.github.cymchad:BaseRecyclerViewAdapterHelper", version.ref = "baserecyclerviewadapterhelper" }
 ble-ktx = { module = "no.nordicsemi.android:ble-ktx", version.ref = "bleKtx" }

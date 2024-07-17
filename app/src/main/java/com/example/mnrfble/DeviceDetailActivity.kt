@@ -56,6 +56,28 @@ class DeviceDetailActivity : AppCompatActivity() {
         mBinding.button3.setOnClickListener {
             mAirPocketViewModel.writeCommand(mBinding.editTextText.text.toString())
         }
+        mBinding.button4.setOnClickListener {
+            mAirPocketViewModel.writeCommand("getbatVol")
+        }
+        mBinding.button5.setOnClickListener {
+            mAirPocketViewModel.writeCommand("getPressure")
+        }
+        mBinding.button6.setOnClickListener {
+            mAirPocketViewModel.writeCommand("setTargetPressure "+mBinding.editTextText2.text.toString())
+        }
+        mBinding.button7.setOnClickListener {
+            mAirPocketViewModel.writeCommand("setDwellTime "+mBinding.editTextText3.text.toString())
+        }
+        mBinding.button8.setOnClickListener {
+            mAirPocketViewModel.writeCommand("getDwellTime")
+        }
+        mBinding.button9.setOnClickListener {
+            mAirPocketViewModel.writeCommand("getintervalTime")
+        }
+        mBinding.button10.setOnClickListener {
+            mAirPocketViewModel.writeCommand("setintervalTime "+mBinding.editTextText4.text.toString())
+        }
+        mAirPocketViewModel.passBinding(mBinding)
     }
 
     private fun initData() {

@@ -37,6 +37,7 @@ import com.example.mnrfble.util.ByteUtils
 import com.example.mnrfble.util.HexUtil
 import java.util.UUID
 import javax.inject.Inject
+import com.example.mnrfble.databinding.ActivityDeviceDetailBinding
 
 
 @SuppressLint("MissingPermission")
@@ -70,6 +71,10 @@ class AirPocketViewModel @Inject constructor(
 
     fun writeCommand(text:String) {
         airPocketRepository.writeCommand(text)
+    }
+
+    fun passBinding(binding:ActivityDeviceDetailBinding){
+        airPocketRepository.passBinding(binding)
     }
 
 
